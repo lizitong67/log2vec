@@ -65,8 +65,8 @@ def store_nodes_of_the_same_day():
         if vertex['vertex_type'] == 'auth':
             daily_sequences_list[day_of_vertex].add_node(vertex['vertex_number'], type=vertex['vertex_type'],
                                                          sub=vertex['sub'], obj=vertex['obj'], A=vertex['A'],
-                                                         auth_type=vertex['auth_type'],
-                                                         logon_type=vertex['logon_type'],
+                                                         AuthType=vertex['auth_type'],
+                                                         LogonType=vertex['logon_type'],
                                                          T=vertex['T'], H=vertex['H'])
         if vertex['vertex_type'] == 'proc':
             daily_sequences_list[day_of_vertex].add_node(vertex['vertex_number'], type=vertex['vertex_type'],
@@ -87,9 +87,9 @@ def rule_1(daily_sequences_list):
             for i in range(1, len(node_list)):
                 day_of_seq = daily_sequences_list.index(daily_sequence)
                 current_seq = daily_sequences_list[day_of_seq]
-                current_seq.add_edge(node_list[i-1], node_list[i], edge_type=1, weight=1)
+                current_seq.add_edge(node_list[i-1], node_list[i], EdgeType=1, weight=1)
     print ("All nodes in sequence graphs are associated into sequences!")
-    return daily_sequence
+    return daily_sequences_list
 
 def rule_23(daily_sequences_list):
     print ("Function 'rule_23()' starts!")
@@ -110,7 +110,7 @@ def rule_23(daily_sequences_list):
                     H_record_tuple[current_H] = [node_i]
                 else:
                     node_j = H_record_tuple[current_H][-1]
-                    daily_sequence.add_edge(node_j, node_i, edge_type=2, weight=1)
+                    daily_sequence.add_edge(node_j, node_i, EdgeType=2, weight=1)
                     H_record_tuple[current_H].append(node_i)
 
             A_record_tuple_tuple = {}
@@ -125,7 +125,7 @@ def rule_23(daily_sequences_list):
                         A_record_tuple[current_A] = [node_i]
                     else:
                         node_j = A_record_tuple[current_A][-1]
-                        daily_sequence.add_edge(node_j, node_i, edge_type=3, weight=1)
+                        daily_sequence.add_edge(node_j, node_i, EdgeType=3, weight=1)
                         A_record_tuple[current_A].append(node_i)
 
                 A_record_tuple_tuple[key]=A_record_tuple
@@ -163,8 +163,8 @@ def rule_456(daily_sequences_list, H_tuple_list, A_tuple_list):
                 len_v = len(node_list_j)
                 weight_u_v = len_u / len_v if len_u < len_v else len_v / len_u
                 w = round(weight_u_v,3)
-                graph.add_edge(u1, v1, edge_type=4, weight=w)
-                graph.add_edge(u2, v2, edge_type=4, weight=w)
+                graph.add_edge(u1, v1, EdgeType=4, weight=w)
+                graph.add_edge(u2, v2, EdgeType=4, weight=w)
 
                 # Add edges based on Rule 5 and Rule 6
                 # key represents H
@@ -178,8 +178,8 @@ def rule_456(daily_sequences_list, H_tuple_list, A_tuple_list):
                         len_v = len(H_tuple_list[j][key])
                         weight_u_v = len_u / len_v if len_u < len_v else len_v / len_u
                         w = round(weight_u_v, 3)
-                        graph.add_edge(u1, v1, edge_type=5, weight=w)
-                        graph.add_edge(u2, v2, edge_type=5, weight=w)
+                        graph.add_edge(u1, v1, EdgeType=5, weight=w)
+                        graph.add_edge(u2, v2, EdgeType=5, weight=w)
 
                         for operation_type in A_tuple_list[i][key]:
                             if operation_type in A_tuple_list[j][key]:
@@ -191,8 +191,8 @@ def rule_456(daily_sequences_list, H_tuple_list, A_tuple_list):
                                 len_v = len(A_tuple_list[j][key][operation_type])
                                 weight_u_v = len_u / len_v if len_u < len_v else len_v / len_u
                                 w = round(weight_u_v, 3)
-                                graph.add_edge(u1, v1, edge_type=6, weight=w)
-                                graph.add_edge(u2, v2, edge_type=6, weight=w)
+                                graph.add_edge(u1, v1, EdgeType=6, weight=w)
+                                graph.add_edge(u2, v2, EdgeType=6, weight=w)
 
     print ("Edges are added based on rule 7 and rule 8 in graph!")
     return graph
@@ -202,13 +202,13 @@ def rule78(graph):
     node_list = list(graph.nodes())
     src_des_autype_tuple={}
     for node_i in node_list:
-        if graph.nodes[node_i]['type']=='auth' and graph.nodes[node_i]['auth_type'] != '?':
-            src_des_autype = graph.nodes[node_i]['H']+'&'+graph.nodes[node_i]['obj']+'&'+graph.nodes[node_i]['auth_type']
+        if graph.nodes[node_i]['type']=='auth' and graph.nodes[node_i]['AuthType'] != '?':
+            src_des_autype = graph.nodes[node_i]['H']+'&'+graph.nodes[node_i]['obj']+'&'+graph.nodes[node_i]['AuthType']
             if src_des_autype not in src_des_autype_tuple.keys():
                 src_des_autype_tuple[src_des_autype]=[node_i]
             else:
                 node_j = src_des_autype_tuple[src_des_autype][-1]
-                graph.add_edge(node_j, node_i, edge_type=7, weight=1)
+                graph.add_edge(node_j, node_i, EdgeType=7, weight=1)
                 src_des_autype_tuple[src_des_autype].append(node_i)
 
     # The key_list records the key of src_des_autype_tuple, the format type of key is src&des&autype
@@ -230,12 +230,12 @@ def rule78(graph):
             weight_u_v = len_u / len_v if len_u < len_v else len_v / len_u
             w = round(weight_u_v, 3)
             if src_des_i == src_des_j:
-                graph.add_edge(u1, v1, edge_type=8.1, weight=w)
-                graph.add_edge(u2, v2, edge_type=8.1, weight=w)
+                graph.add_edge(u1, v1, EdgeType=8.1, weight=w)
+                graph.add_edge(u2, v2, EdgeType=8.1, weight=w)
             if auth_type_i == auth_type_j:
-                graph.add_edge(u1, v1, edge_type=8.2, weight=w)
-                graph.add_edge(u2, v2, edge_type=8.2, weight=w)
-
+                graph.add_edge(u1, v1, EdgeType=8.2, weight=w)
+                graph.add_edge(u2, v2, EdgeType=8.2, weight=w)
+    return graph
 
 if __name__ ==  '__main__':
     print('-----------------------------------------------------------------------')
@@ -249,14 +249,17 @@ if __name__ ==  '__main__':
     print('-----------------------------------------------------------------------')
     graph = rule78(graph)
     print('-----------------------------------------------------------------------')
-
-
-
-
-
-    # print (H_tuple_list)
-    # print (daily_sequences_list[0].edges.data())
-
+    print('number of nodes', graph.number_of_nodes())
+    print('number of edges', graph.number_of_edges())
+    # with open('nodes.txt', 'a+', encoding='utf-8') as file:
+    #     file.write(str(graph.nodes.data()))
+    # with open('edges.txt', 'a+', encoding='utf-8') as file:
+    #     file.write(str(graph.edges.data()))
+    print('-----------------------------------------------------------------------')
+    nx.write_gml(graph, "data/demo_data/graph.gml")
+    print("The graph is stored locally!")
+    # graph = nx.read_gml("data/demo_data/graph.gml")
+    print('-----------------------------------------------------------------------')
 
 
 
